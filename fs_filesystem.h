@@ -12,22 +12,61 @@ class FileSystem {
   char *disk;
   int numOfSectors, sizeOfSectors, numOfSectorsInPool;
 
-  void init(List<File> *files = nullptr, List<Block> *pool = nullptr,
-            char *disk = nullptr, int numOfSectors = 0, int sizeOfSectors = 0,
-            int numOfSectorsInPool = 0) {}
+  void init(List<File> *files = new List<File>,
+            List<Block> *pool = new List<Block>, char *disk = new char[200],
+            int numOfSectors = 0, int sizeOfSectors = 0,
+            int numOfSectorsInPool = 0) {
+    this->files = files;
+    this->pool = pool;
+    this->disk = disk;
+    this->numOfSectors = numOfSectors;
+    this->sizeOfSectors = sizeOfSectors;
+    this->numOfSectorsInPool = numOfSectorsInPool;
+  }
 
  public:
   friend ostream &operator<<(ostream &out, FileSystem &f);
   friend istream &operator>>(istream &in, FileSystem &f);
   FileSystem() { init(); }
 
-  FileSystem(List<File> *files, List<Block> *pool, char *disk, int numOfSectors,
-             int sizeOfSectors, int numOfSectorsInPool) {}
+  FileSystem(FileSystem &obj) {
+    init(obj.files, obj.pool, obj.disk, obj.numOfSectors, obj.sizeOfSectors,
+         obj.numOfSectorsInPool);
+  }
+  // FileSystem(List<File> *files, List<Block> *pool, char *disk, int
+  // numOfSectors,
+  //            int sizeOfSectors, int numOfSectorsInPool) {}
 
   ~FileSystem() {
-    if (files) delete files;
-    if (pool) delete pool;
-    if (disk) delete[] disk;
+    // if (files) delete files;
+    // if (pool) delete pool;
+    // if (disk) delete[] disk;
+  }
+
+  void push_back(File obj) {
+    if (!files->head->data) {
+      files->head->data = obj;
+      files->head->next = files->tail;
+      return;
+    }
+
+    files->tail->data = obj;
+    files->tail->next = new Node<File>;
+    files->tail = files->tail->next;
+    files->size++;
+  }
+
+  void push_back(Block obj) {
+    if (!pool->head->data) {
+      pool->head->data = obj;
+      pool->head->next = pool->tail;
+      return;
+    }
+
+    pool->tail->data = obj;
+    pool->tail->next = new Node<Block>;
+    pool->tail = pool->tail->next;
+    pool->size++;
   }
 
   void saveFile(string fname, char fcontent[], int fsize) {}
@@ -93,14 +132,14 @@ istream &operator>>(istream &in, FileSystem &f) {
     File temp;
     cout << "\n[Enter information for file " << i + 1 << "]\n" << endl;
     cin >> temp;
-    f.files->push(temp);
+    f.push_back(temp);
   }
 
   for (int i = 0; i < blocks_count; i++) {
     Block temp_block;
     cout << "\nEnter information for Block " << i + 1 << endl << endl;
     cin >> temp_block;
-    f.pool->push(temp_block);
+    f.push_back(temp_block);
   }
   cout << "||||||||FAT FILESYSTEM SPECIFICATIONS INPUT||||||\n";
   return in;

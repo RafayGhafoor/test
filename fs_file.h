@@ -34,9 +34,9 @@ class File {
   operator bool() const { return name != ""; }
 
   ~File() {
-    if (nodes) {
-      delete nodes;
-    }
+    // if (nodes) {
+    //   delete nodes;
+    // }
   }
 
   int get_required_sectors(int defined_bytes_in_sector) const {
@@ -60,9 +60,10 @@ istream &operator>>(istream &in, File &f) {
   int blocks_count;
   cout << "Please enter Blocks Count: \n";
   cin >> blocks_count;
-  Block a;
 
   for (int i = 0; i < blocks_count; i++) {
+    Block a;
+    cout << "\nBlock Number [" << i + 1 << "]\n";
     cin >> a;
     f.nodes->push(a);
   }

@@ -16,9 +16,7 @@ class Block {
 
   Block() { init(); }
 
-  Block(Block &obj) { 
-      init(obj.start_sector_ID, obj.total_sectors); 
-    }
+  Block(Block &obj) { init(obj.start_sector_ID, obj.total_sectors); }
 
   Block(int start_sector_ID, int total_sectors) {
     init(start_sector_ID, total_sectors);
@@ -45,6 +43,6 @@ ostream &operator<<(ostream &out, Block &f) {
   cout << "=============BLOCK====================\n";
   out << "Start Sector ID: " << f.start_sector_ID;
   out << "\nTotal Sectors Count: " << f.total_sectors << endl;
-  cout << "=============BLOCK====================\n";
+  cout << "\n=============BLOCK====================\n\n";
   return out;
 }

@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-
 using namespace std;
 
 template <class T>
@@ -16,6 +15,10 @@ class Node {
   friend istream &operator>>(istream &in, Node<U> &f);
   Node() { next = nullptr; }
   Node(T d, Node *n = nullptr) : data(d), next(n) {}
+  operator bool() const {
+    if (data) return 1;
+    return 0;
+  }
 };
 
 template <typename T>
@@ -26,9 +29,8 @@ ostream &operator<<(ostream &out, Node<T> &f) {
 
 template <typename T>
 istream &operator>>(istream &in, Node<T> &f) {
-  cout << "[Enter data]\n";
   in >> f.data;
-  next = new Node<T>;
+  f.next = new Node<T>;
   return in;
 }
 template <class T>
@@ -39,6 +41,9 @@ class List {
   int size;
   void init(Node<T> *head = new Node<T>, Node<T> *tail = new Node<T>,
             int size = 0) {
+    this->head = head;
+    this->tail = tail;
+    this->size = size;
     this->head->next = tail;
   }
 
@@ -60,29 +65,27 @@ class List {
   List(List &obj) { init(obj.head, obj.tail, obj.size); }
 
   void push(T d) {
-    if (head->data) {
-      tail->data = d;
-      tail->next = new Node<T>;
-      tail = tail->next;
-      size++;
-    }
-    else {
+    if (!head->data) {
       head->data = d;
       head->next = tail;
       return;
     }
+    tail->data = d;
+    tail->next = new Node<T>;
+    tail = tail->next;
+    size++;
   }
 
   ~List() {
-    while (this->head->next != this->tail) {
-      if (this->head->next != this->tail) {
-        Node<T> *t = this->head->next;
-        head->next = t->next;
-        if (t) delete t;
-      }
-    }
-    if (this->head) delete this->head;
-    if (this->tail) delete this->tail;
+    // while (this->head->next != this->tail) {
+    //   if (this->head->next != this->tail) {
+    //     Node<T> *t = this->head->next;
+    //     head->next = t->next;
+    //     if (t) delete t;
+    //   }
+    // }
+    // if (this->head) delete this->head;
+    // if (this->tail) delete this->tail;
   }
 
   bool equals(string x) {
@@ -143,7 +146,7 @@ void List<string>::push(string value) {
 template <typename U>
 ostream &operator<<(ostream &out, List<U> &f) {
   while (f.head) {
-    cout << f.head << endl;
+    cout << f.head->data << endl;
     if (f.head->next == f.tail) break;
     f.head = f.head->next;
   }

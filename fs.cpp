@@ -5,8 +5,10 @@
 using namespace std;
 
 int main() {
-    List<Node<File>> files;
-    cin >> files;
-    // FileSystem f;
-    // cin >> f;
+    FileSystem d;
+    cin >> d;
+    cout << d;
+//   List<int> a;
+//   cin >> a;
+//   cout << a;
 }
